@@ -42,7 +42,7 @@ class Trainer:
                 weight_decay=self.config.weight_decay,
             )
         elif self.config.optimizer == "Adam":
-            self.optimizer = torch.optim.Adam(
+            self.optimizer = torch.optim.AdamW(
                 self.model.parameters(),
                 lr=self.config.lr_init,
                 weight_decay=self.config.weight_decay,
@@ -163,7 +163,7 @@ class Trainer:
         # target_value: batch, num_unroll_steps+1, 2*support_size+1
         # target_reward: batch, num_unroll_steps+1, 2*support_size+1
 
-        ## Generate predictions
+        # Generate predictions
         value, reward, policy_logits, hidden_state = self.model.initial_inference(
             observation_batch
         )
@@ -177,7 +177,7 @@ class Trainer:
             predictions.append((value, reward, policy_logits))
         # predictions: num_unroll_steps+1, 3, batch, 2*support_size+1 | 2*support_size+1 | 9 (according to the 2nd dim)
 
-        ## Compute losses
+        # Compute losses
         value_loss, reward_loss, policy_loss = (0, 0, 0)
         value, reward, policy_logits = predictions[0]
         # Ignore reward loss for the first batch step
